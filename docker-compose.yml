@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: .
+      dockerfile: docker/client.Dockerfile
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost/api
+      - NEXT_PUBLIC_SOCKET_URL=http://localhost
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/server.Dockerfile
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/chat-app
+      - JWT_SECRET=your_jwt_secret
+      - CLIENT_URL=http://localhost
+    depends_on:
+      - mongodb
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx.Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - client
+      - server
+
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data: 
