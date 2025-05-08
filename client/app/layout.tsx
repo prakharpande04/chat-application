@@ -1,3 +1,5 @@
+"use client"
+
 import { ChakraProvider } from '@chakra-ui/react';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { SocketProvider } from '@/contexts/SocketContext';
